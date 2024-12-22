@@ -1,8 +1,4 @@
-export interface User {
-  username: string;
-  email: string;
-  created_at: string;
-}
+import { User } from "../users/users-type";
 
 export interface AuthState extends User {
   access_token: string;

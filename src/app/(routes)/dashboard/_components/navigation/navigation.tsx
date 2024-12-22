@@ -7,14 +7,14 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/65 backdrop-blur-2xl">
       <div className="flex justify-around">
         {URLs.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className={`flex flex-col items-center p-2 ${
-              pathname === item.href ? "text-primary" : "text-muted-foreground"
+              pathname === item.href ? "text-zinc-800" : "text-zinc-400"
             }`}
           >
             <item.icon className="h-6 w-6" />

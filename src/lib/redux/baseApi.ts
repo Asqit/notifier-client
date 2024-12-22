@@ -5,7 +5,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 12_0000,
   prepareHeaders(headers, { getState }) {
-    const token = (getState() as RootState)?.auth?.accessToken;
+    const token = (getState() as RootState)?.auth?.access_token;
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
@@ -16,7 +16,7 @@ const baseQuery = fetchBaseQuery({
 
 export const baseApi = createApi({
   endpoints: () => ({}),
-  tagTypes: [],
+  tagTypes: ["User", "Nudge", "Notification"],
   keepUnusedDataFor: 60,
   baseQuery,
 });
