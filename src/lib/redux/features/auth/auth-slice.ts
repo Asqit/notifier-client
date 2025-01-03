@@ -14,13 +14,19 @@ export const authSlice = createSlice({
         authApi.endpoints.login.matchFulfilled,
         (_state, { payload }) => {
           return payload;
-        }
+        },
       )
       .addMatcher(
         authApi.endpoints.register.matchFulfilled,
         (_state, { payload }) => {
           return payload;
-        }
+        },
+      )
+      .addMatcher(
+        authApi.endpoints.getMe.matchFulfilled,
+        (state, { payload }) => {
+          return { ...state, ...payload };
+        },
       );
   },
 });

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useGetFriendsQuery } from "@/lib/redux/features/users/users-api";
+import { useGetFollowingQuery } from "@/lib/redux/features/users/users-api";
 import { z } from "zod";
 import { SelectGroup, SelectLabel } from "@radix-ui/react-select";
 import {
@@ -37,7 +37,7 @@ const schema = z.object({
 });
 
 export function CreateNudge() {
-  const { data, isLoading, isError } = useGetFriendsQuery();
+  const { data, isLoading, isError } = useGetFollowingQuery();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {},

@@ -1,15 +1,19 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { useGetUserQuery } from "@/lib/redux/features/users/users-api";
-import { useRequestFriendshipMutation } from "@/lib/redux/features/users/users-api";
+import { Bio } from "./_components/bio";
+import { FriendshipWrapper } from "./_components/friendship-wrapper";
+import { RelationCounter } from "./_components/relation-counter";
+import Image from "next/image";
+import { MiscDetails } from "./_components/misc-details";
+import clsx from "clsx";
+import { UpdateUserModal } from "./_components/update-user-modal";
 
 interface Props {
   userId: number;
 }
 
 export function ProfileDetails({ userId }: Props) {
-  const [requestFriendship] = useRequestFriendshipMutation();
-  const { data, isLoading, isError } = useGetUserQuery(userId);
+  const { data, isLoading, isError } = useGetUserQuery(userId); // fetch latest update
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -20,16 +24,44 @@ export function ProfileDetails({ userId }: Props) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col items-center gap-2">
-        <div className="bg-zinc-400 p-9 w-0 rounded-full" />
-        <h2 className="text-xl font-semibold">{data.username}</h2>
-        <p>member since {new Date(data.created_at).toLocaleString()}</p>
-        <Button onClick={() => requestFriendship(userId)}>
-          Request Friendship
-        </Button>
+    <div className="border rounded-lg">
+      <div
+        className={clsx(
+          "p-8 rounded-t-lg flex items-center space-x-4 border-b",
+        )}
+        style={data.color ? { backgroundColor: data.color } : undefined}
+      >
+        <Image
+          src=""
+          alt=""
+          width={96}
+          height={96}
+          className={`border-2 rounded-full object-cover`}
+          style={data.color ? { backgroundColor: data.color } : undefined}
+        />
+        <div className="flex-grow">
+          <h2 className="text-2xl font-bold">{data.username}</h2>
+          <RelationCounter />
+        </div>
+        <div>
+          <FriendshipWrapper userId={data.id} />
+        </div>
       </div>
-      <hr />
+      <div className="p-8 space-y-4">
+        <Bio userId={data.id} bio={data.bio} />
+        <MiscDetails
+          web={data.web}
+          location={data.location}
+          createdAt={data.created_at}
+        />
+        <UpdateUserModal
+          username={data.username}
+          bio={data.bio}
+          web={data.web}
+          location={data.location}
+          color={data.color}
+        />
+      </div>
     </div>
   );
 }
