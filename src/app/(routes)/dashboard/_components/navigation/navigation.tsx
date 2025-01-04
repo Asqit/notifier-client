@@ -7,7 +7,7 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white/65 backdrop-blur-2xl">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/65 backdrop-blur-2xl container mx-auto max-w-screen-lg">
       <div className="flex justify-around">
         {URLs.map((item) => (
           <Link

@@ -6,3 +6,9 @@ export interface Nudge {
   sender_id: number;
   recipient_id: number;
 }
+
+export interface CreateNudge {
+  type: string;
+  message: string;
+  recipient_id: number;
+}
