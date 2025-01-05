@@ -2,12 +2,14 @@
 import type { ReactNode } from "react";
 import { AuthWrapper, Navigation, TopBar } from "./_components";
 import { useGetMeQuery } from "@/lib/redux/features/auth/auth-api";
+import { useRegisterWorker } from "@/app/_hooks/useRegisterWorker";
 
 interface Props {
   children: Readonly<ReactNode>;
 }
 
 export default function DashboardLayout({ children }: Props) {
+  useRegisterWorker("sw.js");
   useGetMeQuery();
 
   return (
