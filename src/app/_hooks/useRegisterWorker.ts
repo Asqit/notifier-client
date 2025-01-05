@@ -7,8 +7,11 @@ import {
 
 // i am drunk and I dont even know what am i thinking rn
 // i just need to register the focking worker
-export function useRegisterWorker(url: string) {
+export function useRegisterWorker(
+  url: string,
+): [ServiceWorkerRegistration, string] {
   const [permission, setPermission] = useState<string>();
+  const [registration, setRegistration] = useState<ServiceWorkerRegistration>();
 
   useEffect(() => {
     (async () => {
@@ -26,12 +29,14 @@ export function useRegisterWorker(url: string) {
       }
 
       try {
-        await registerServiceWorker(url);
+        const registration = await registerServiceWorker(url);
+
+        setRegistration(registration);
       } catch (error) {
         console.error(error);
       }
     })();
   }, [url]);
 
-  return permission;
+  return [registration, permission];
 }

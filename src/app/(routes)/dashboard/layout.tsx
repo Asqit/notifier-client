@@ -1,5 +1,5 @@
 "use client";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { AuthWrapper, Navigation, TopBar } from "./_components";
 import { useGetMeQuery } from "@/lib/redux/features/auth/auth-api";
 import { useRegisterWorker } from "@/app/_hooks/useRegisterWorker";
@@ -9,8 +9,21 @@ interface Props {
 }
 
 export default function DashboardLayout({ children }: Props) {
-  useRegisterWorker("sw.js");
-  useGetMeQuery();
+  const [registration] = useRegisterWorker("sw.js");
+  const { data } = useGetMeQuery();
+
+  useEffect(() => {
+    if (registration) {
+      const userId = data?.id;
+
+      if (userId) {
+        registration.active?.postMessage({
+          type: "SET_USER_ID",
+          userId,
+        });
+      }
+    }
+  }, [data?.id, registration]);
 
   return (
     <AuthWrapper>
