@@ -14,7 +14,6 @@ import { z } from "zod";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,9 +21,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import type { User } from "@/lib/redux/features/users/users-type";
-import { LoaderCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Plus, Smile, Heart, ThumbsUp, Star } from "lucide-react";
+import {
+  Plus,
+  Smile,
+  Heart,
+  ThumbsUp,
+  Star,
+  Loader,
+  ChevronsUpDown,
+  LoaderCircle,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Collapsible,
@@ -34,6 +41,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useCreatedNudgeMutation } from "@/lib/redux/features/nudge/nudges-api";
 import clsx from "clsx";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const NUDGE_TYPES = [
   { icon: Smile, label: "Friendly wave" },
@@ -50,6 +58,7 @@ const schema = z.object({
 export function CreateNudge() {
   const { data, isLoading } = useGetFollowingQuery();
   const [createNudge, metadata] = useCreatedNudgeMutation();
+  const [selectedCard, setSelectedCard] = useState<string>("");
   const [selectedFriend, setSelectedFriend] = useState<User | undefined>();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -65,6 +74,7 @@ export function CreateNudge() {
         message,
         type: "text",
       }).unwrap();
+      setSelectedFriend(undefined);
     } catch (error) {
       console.error(error);
     }
@@ -85,6 +95,15 @@ export function CreateNudge() {
         </DialogHeader>
         {!selectedFriend ? (
           <ul className="space-y-4">
+            {metadata.isSuccess && (
+              <Alert className="bg-green-400">
+                <AlertTitle>Nudge has been sent!</AlertTitle>
+                <AlertDescription>
+                  Your nudge has been sucessfully sent.
+                </AlertDescription>
+              </Alert>
+            )}
+
             {isLoading && <LoaderCircle className="animate-spin" />}
             {data?.map((user) => (
               <li key={user.id}>
@@ -117,10 +136,12 @@ export function CreateNudge() {
                       key={label}
                       className={clsx(
                         `p-4 cursor-pointer transition-colors`,
-                        form.getValues().message === label ? "bg-zinc-400" : "",
+                        selectedCard === label &&
+                          "bg-zinc-200 scale-95 transition-all",
                       )}
                       onClick={() => {
                         form.setValue("message", label);
+                        setSelectedCard(label);
                       }}
                     >
                       <div className="flex flex-col items-center gap-2 text-center">
@@ -134,7 +155,11 @@ export function CreateNudge() {
                 <Separator />
 
                 <Collapsible>
-                  <CollapsibleTrigger>Custom Message</CollapsibleTrigger>
+                  <CollapsibleTrigger asChild>
+                    <Button variant={"ghost"} className="w-full">
+                      Custom Message <ChevronsUpDown />
+                    </Button>
+                  </CollapsibleTrigger>
                   <CollapsibleContent>
                     <FormField
                       control={form.control}
@@ -143,7 +168,13 @@ export function CreateNudge() {
                         <FormItem>
                           <FormLabel>Message</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input
+                              {...field}
+                              onChange={(e) => {
+                                setSelectedCard("");
+                                form.setValue("message", e.currentTarget.value);
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -152,7 +183,10 @@ export function CreateNudge() {
                   </CollapsibleContent>
                 </Collapsible>
 
-                <Button type="submit">Create</Button>
+                <Button type="submit" disabled={metadata.isLoading}>
+                  {metadata.isLoading && <Loader className="animate-spin" />}
+                  Create
+                </Button>
               </form>
             </Form>
           </>

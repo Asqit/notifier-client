@@ -13,6 +13,7 @@ import { useAppSelector } from "@/lib/redux/hooks";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 //import Image from "next/image";
 import clsx from "clsx";
+import { NudgeCard } from "./_components/nudge-card";
 
 interface Props {
   userId: number;
@@ -90,18 +91,12 @@ export function ProfileDetails({ userId }: Props) {
               </TabsList>
               <TabsContent value="sent" className="space-y-2">
                 {sentNudges?.map((nudge) => (
-                  <div key={nudge.id} className="border rounded-lg p-2">
-                    <h3>{nudge.sender_id}</h3>
-                    <p>{nudge.message}</p>
-                  </div>
+                  <NudgeCard key={nudge.id} isNudgeSent={true} data={nudge} />
                 ))}
               </TabsContent>
               <TabsContent value="received" className="space-y-2">
                 {receivedNudges?.map((nudge) => (
-                  <div key={nudge.id} className="border rounded-lg p-2">
-                    <h3>{nudge.sender_id}</h3>
-                    <p>{nudge.message}</p>
-                  </div>
+                  <NudgeCard key={nudge.id} isNudgeSent={false} data={nudge} />
                 ))}
               </TabsContent>
             </Tabs>
