@@ -14,7 +14,7 @@ const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (response, _error, _arguments) => [
         { type: "User", id: "currentUser" },
-        { type: "User", id: response.id },
+        { type: "User", id: response?.id },
       ],
     }),
     // --------------------------------------------------------------- GET USER

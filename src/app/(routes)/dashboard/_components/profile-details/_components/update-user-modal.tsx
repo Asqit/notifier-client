@@ -1,8 +1,10 @@
+"use client";
+
+import type { UpdateUser } from "@/lib/redux/features/users/users-type";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -19,21 +21,19 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import type { UpdateUser } from "@/lib/redux/features/users/users-type";
 import { useUpdateUserMutation } from "@/lib/redux/features/users/users-api";
 
 const updateUserSchema = z.object({
-  username: z.string(),
   bio: z.string(),
   color: z.string(),
   web: z.string(),
   location: z.string(),
 });
 
-type Props = Required<UpdateUser>;
+type Props = Omit<Required<UpdateUser>, "username">;
 
 export function UpdateUserModal(props: Props) {
-  const [update, updateMetadata] = useUpdateUserMutation();
+  const [update] = useUpdateUserMutation();
   const form = useForm<z.infer<typeof updateUserSchema>>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: { ...props },
@@ -59,7 +59,7 @@ export function UpdateUserModal(props: Props) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            {Object.entries(props).map(([key, _value]) => (
+            {Object.entries(props).map(([key]) => (
               <FormField
                 key={key}
                 control={form.control}

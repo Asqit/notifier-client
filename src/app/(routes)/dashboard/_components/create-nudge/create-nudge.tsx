@@ -23,7 +23,6 @@ import { useState } from "react";
 import type { User } from "@/lib/redux/features/users/users-type";
 import { Input } from "@/components/ui/input";
 import {
-  Plus,
   Smile,
   Heart,
   ThumbsUp,
@@ -31,6 +30,8 @@ import {
   Loader,
   ChevronsUpDown,
   LoaderCircle,
+  Ban,
+  Pointer,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
@@ -40,8 +41,8 @@ import {
 } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { useCreatedNudgeMutation } from "@/lib/redux/features/nudge/nudges-api";
-import clsx from "clsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import clsx from "clsx";
 
 const NUDGE_TYPES = [
   { icon: Smile, label: "Friendly wave" },
@@ -84,7 +85,7 @@ export function CreateNudge() {
     <Dialog>
       <DialogTrigger asChild>
         <button className="fixed bottom-24 right-4 bg-foreground text-background rounded-full p-2 transition-transform hover:scale-75">
-          <Plus size={32} />
+          <Pointer size={24} />
         </button>
       </DialogTrigger>
       <DialogContent>
@@ -105,23 +106,33 @@ export function CreateNudge() {
             )}
 
             {isLoading && <LoaderCircle className="animate-spin" />}
-            {data?.map((user) => (
-              <li key={user.id}>
-                <button
-                  onClick={() => {
-                    setSelectedFriend(user);
-                    form.setValue("friend", String(user.id));
-                  }}
-                  className="w-full flex items-center border rounded-lg p-1 hover:bg-white transition-colors text-left gap-2"
-                >
-                  <div className="w-0 p-4 rounded-full bg-zinc-400" />
-                  <div>
-                    <p className="text-lg font-semibold">{user.username}</p>
-                    <p>{user.email}</p>
-                  </div>
-                </button>
+            {data && data.length > 0 ? (
+              data?.map((user) => (
+                <li key={user.id}>
+                  <button
+                    onClick={() => {
+                      setSelectedFriend(user);
+                      form.setValue("friend", String(user.id));
+                    }}
+                    className="w-full flex items-center border rounded-lg p-1 hover:bg-white transition-colors text-left gap-2"
+                  >
+                    <div className="w-0 p-4 rounded-full bg-zinc-400" />
+                    <div>
+                      <p className="text-lg font-semibold">{user.username}</p>
+                      <p>{user.email}</p>
+                    </div>
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="flex py-8 flex-col items-center justify-center border rounded-lg">
+                <Ban />
+                <h2>No mutual followers</h2>
               </li>
-            ))}
+            )}
+            <li className="text-sm text-muted-foreground">
+              To send nudges, the people you follow must also follow you back.
+            </li>
           </ul>
         ) : (
           <>
@@ -137,7 +148,7 @@ export function CreateNudge() {
                       className={clsx(
                         `p-4 cursor-pointer transition-colors`,
                         selectedCard === label &&
-                          "bg-zinc-200 scale-95 transition-all",
+                          "bg-zinc-200 scale-95 transition-all"
                       )}
                       onClick={() => {
                         form.setValue("message", label);

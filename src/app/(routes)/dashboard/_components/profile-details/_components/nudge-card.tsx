@@ -18,12 +18,12 @@ export function NudgeCard({ data, isNudgeSent }: Props) {
   const { message, created_at, recipient_id, sender_id } = data;
 
   return (
-    <Card className="w-full">
-      <CardHeader></CardHeader>
-      <CardContent>
+    <Card className="w-full p-2">
+      <CardHeader className="p-0"></CardHeader>
+      <CardContent className="p-0">
         <p className="text-lg">{message}</p>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="p-0">
         {!isNudgeSent && (
           <Button variant="ghost" size="sm">
             <MessageCircle className="mr-1 h-4 w-4" />

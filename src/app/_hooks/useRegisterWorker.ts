@@ -5,8 +5,6 @@ import {
   requestNotificationPermission,
 } from "../_utils/sw";
 
-// i am drunk and I dont even know what am i thinking rn
-// i just need to register the focking worker
 export function useRegisterWorker(
   url: string,
 ): [ServiceWorkerRegistration, string] {

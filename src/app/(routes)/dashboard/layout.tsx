@@ -3,13 +3,14 @@ import { useEffect, type ReactNode } from "react";
 import { AuthWrapper, Navigation, TopBar } from "./_components";
 import { useGetMeQuery } from "@/lib/redux/features/auth/auth-api";
 import { useRegisterWorker } from "@/app/_hooks/useRegisterWorker";
+import { CreateNudge } from "./_components/create-nudge/create-nudge";
 
 interface Props {
   children: Readonly<ReactNode>;
 }
 
 export default function DashboardLayout({ children }: Props) {
-  const [registration] = useRegisterWorker("sw.js");
+  const [registration] = useRegisterWorker("/sw.js");
   const { data } = useGetMeQuery();
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export default function DashboardLayout({ children }: Props) {
           <TopBar />
           {children}
           <Navigation />
+          <CreateNudge />
         </div>
       </div>
     </AuthWrapper>

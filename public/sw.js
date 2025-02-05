@@ -81,6 +81,7 @@ self.addEventListener("activate", async () => {
     }
 
     const publicKey = await getApplicationServerKey();
+    console.log(publicKey);
     const applicationServerKey = urlB64ToUint8Array(publicKey);
 
     const subscription = await self.registration.pushManager.subscribe({

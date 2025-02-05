@@ -6,14 +6,16 @@ import { RelationCounter } from "./_components/relation-counter";
 import { MiscDetails } from "./_components/misc-details";
 import { UpdateUserModal } from "./_components/update-user-modal";
 import {
-  useGetReceivedNudgesQuery,
-  useGetSentNudgesQuery,
+  useGetReceivedNudgesPreviewQuery,
+  useGetSentNudgesPreviewQuery,
 } from "@/lib/redux/features/nudge/nudges-api";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-//import Image from "next/image";
-import clsx from "clsx";
 import { NudgeCard } from "./_components/nudge-card";
+import { memo } from "react";
+import clsx from "clsx";
+
+const MemoizedRelationCounter = memo(RelationCounter);
 
 interface Props {
   userId: number;
@@ -22,12 +24,14 @@ interface Props {
 export function ProfileDetails({ userId }: Props) {
   const { id } = useAppSelector((store) => store.auth);
   const { data, isLoading, isError } = useGetUserQuery(userId); // fetch latest update
-  const { data: sentNudges } = useGetSentNudgesQuery(undefined, {
-    skip: userId !== id,
+  const isCurrentUser = userId === id;
+
+  const { data: sentNudges } = useGetSentNudgesPreviewQuery(undefined, {
+    skip: !isCurrentUser,
   });
 
-  const { data: receivedNudges } = useGetReceivedNudgesQuery(undefined, {
-    skip: userId !== id,
+  const { data: receivedNudges } = useGetReceivedNudgesPreviewQuery(undefined, {
+    skip: !isCurrentUser,
   });
 
   if (isLoading) {
@@ -38,6 +42,7 @@ export function ProfileDetails({ userId }: Props) {
     return <div>Error</div>;
   }
 
+  console.log(sentNudges, receivedNudges);
   return (
     <div className="space-y-4">
       <div className="border rounded-lg">
@@ -47,33 +52,24 @@ export function ProfileDetails({ userId }: Props) {
             "p-8 rounded-t-lg flex items-center space-x-4 border-b",
           )}
         >
-          {/*
-          <Image
-            src=""
-            alt=""
-            width={96}
-            height={96}
-            className={`border-2 rounded-full object-cover`}
-            style={data.color ? { backgroundColor: data.color } : undefined}
-          />
-          */}
           <div
             className={`border-2 rounded-full object-cover w-[96px] aspect-square`}
             style={data.color ? { backgroundColor: data.color } : undefined}
           />
           <div className="flex-grow">
             <h2 className="text-2xl font-bold">{data.username}</h2>
-            <RelationCounter />
+            <MemoizedRelationCounter />
           </div>
           <div className="flex items-center gap-1">
             <FriendshipWrapper userId={data.id} />
-            <UpdateUserModal
-              username={data.username}
-              bio={data.bio}
-              web={data.web}
-              location={data.location}
-              color={data.color}
-            />
+            {isCurrentUser && (
+              <UpdateUserModal
+                bio={data.bio}
+                web={data.web}
+                location={data.location}
+                color={data.color}
+              />
+            )}
           </div>
         </div>
         <div className="p-8 space-y-4">
