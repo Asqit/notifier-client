@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Notifier
 
-## Getting Started
+This application aims to let your close ones notified, that you are thinking about them.
 
-First, run the development server:
+## Running Locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```shell
+$ yarn install # install dependencies. Yarn is preferred
+$ echo "NEXT_PUBLIC_BASE_URL=\"http://localhost:8000\"" >> .env # prepare the environmental variables
+$ yarn dev # run the dev server
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech. Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Frontend:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Next.js: SSR/G
+- React.js: UI library
+- tailwindcss: styling
+- shadcn/ui: component library
+- RTK+Query: State management & data caching
 
-## Learn More
+written in Typescript 5.
 
-To learn more about Next.js, take a look at the following resources:
+### Backend:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- FastAPI: Opinionated web framework for Python
+- Webpush: Push notification
+- fastapi-pagination: Pagination plugin for FastAPI
+- invoke: program management tool
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+written in Python 3.13
